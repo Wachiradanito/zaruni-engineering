@@ -135,7 +135,7 @@ flowchart LR
     end
 
     subgraph Pool["PgBouncer\nConnection Pool"]
-        POOL["500 client connections → 25 Postgres connections\ntransaction-pooling mode"]
+        POOL["1000 client connections → 25 Postgres connections\ntransaction-pooling mode"]
     end
 
     PG["PostgreSQL\nmax_connections = 100"]
