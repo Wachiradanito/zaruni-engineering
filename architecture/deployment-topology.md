@@ -79,16 +79,16 @@ CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
 ### PostgreSQL + PgBouncer
 
 **Purpose:** Primary database  
-**Runs:** PostgreSQL 15, with PgBouncer configured in transaction-pooling mode
+**Runs:** PostgreSQL 15 with PgBouncer in transaction-pooling mode
 
 PgBouncer sits between the application and PostgreSQL, reusing a small pool of actual Postgres connections for many simultaneous client connections. This prevents Django workers from exhausting Postgres's connection limit under load.
 
 **Config:**
 - `pool_mode = transaction` — connection returned to pool after each transaction
-- `max_client_conn = 1000` — many clients can request connections
+- `max_client_conn = 1000` — clients can ask for up to 1000 connections
 - `default_pool_size = 25` — only 25 actual Postgres connections maintained
 
-Django is configured with `CONN_MAX_AGE=0` and `DISABLE_SERVER_SIDE_CURSORS=True` when PgBouncer is active — both required for transaction-pooling mode to work correctly.
+Django is configured with `CONN_MAX_AGE=0` and `DISABLE_SERVER_SIDE_CURSORS=True` — both required for PgBouncer transaction mode to work correctly.
 
 ---
 
