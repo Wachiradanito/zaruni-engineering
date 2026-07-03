@@ -203,7 +203,7 @@ WebSocket traffic is routed through Caddy to the ASGI server (same Django proces
 
 | Service | Purpose |
 |---------|---------|
-| Safaricom Daraja (M-PESA) | STK Push payments, B2C payouts |
+| Safaricom Daraja (M-PESA) | STK Push payments, M-PESA withdrawals |
 | Stripe | Card payments |
 | FCM (Firebase) | Mobile push notifications |
 | Google OAuth | Social login |

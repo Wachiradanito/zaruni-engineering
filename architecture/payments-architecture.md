@@ -1,6 +1,6 @@
 # Payments Architecture
 
-Zaruni handles real money — M-PESA payments from Kenyan users, escrow holds for marketplace and job transactions, and B2C payouts to workers and sellers. This document describes the payment system design.
+Zaruni handles real money — M-PESA payments from Kenyan users, escrow holds for marketplace and job transactions, and withdrawals to workers and sellers once work is confirmed. This document describes the payment system design.
 
 ---
 
@@ -53,7 +53,7 @@ User                  Zaruni API              Safaricom
  │                        │◄──────────────────────│
  │                        │                       │
  │                        │  [idempotent process] │
- │                        │  wallet credited      │
+ │                        │  balance updated      │
  │                        │  escrow funded        │
  │  Notification: paid ✓  │                       │
  │◄───────────────────────│                       │
@@ -67,13 +67,13 @@ This is the critical section — see the [M-PESA idempotency case study](../case
 2. IP allowlist check — non-Safaricom IPs are rejected
 3. `ProviderWebhookLog.objects.get_or_create(provider, event_id)` — unique constraint prevents duplicate rows
 4. `select_for_update(skip_locked=True)` — only one worker can process a given callback
-5. Provider adapter parses the payload, extracts confirmation status
+5. M-PESA integration parses the payload, extracts confirmation status
 6. Intent matched via `CheckoutRequestID`
-7. Wallet credited with idempotency key scoped to this intent
+7. Balance updated with idempotency key scoped to this intent
 8. Escrow funded (if payment was for an escrow-backed transaction)
 9. Log marked `processed = True`
 
-If Safaricom delivers the callback twice, step 3 returns the existing row and step 4 returns `None` for the second worker. No double credit possible.
+If Safaricom delivers the callback twice, step 3 returns the existing row and step 4 returns `None` for the second worker. No double update possible.
 
 ---
 
@@ -137,8 +137,8 @@ When a seller or worker withdraws their wallet balance:
 1. User requests withdrawal (specifying amount and M-PESA phone number)
 2. Withdrawal limit checked — daily limit enforced, resets at midnight
 3. Balance deducted atomically with `select_for_update()`
-4. B2C M-PESA payout initiated with idempotency key
-5. Payout status polled / callback received
+4. M-PESA withdrawal request initiated with idempotency key
+5. Withdrawal status confirmed / callback received
 6. On failure: balance refunded, user notified
 
 Withdrawal limits exist to protect against account compromise and fraud. New accounts have lower limits that increase as trust score improves.
@@ -156,12 +156,12 @@ Disputes put the associated escrow on hold. A staff member reviews evidence subm
 
 ---
 
-## Provider Architecture
+## Payment Integration Architecture
 
-Zaruni supports multiple payment providers through a provider adapter pattern:
+Zaruni integrates with multiple payment methods through a common interface:
 
 ```python
-class PaymentIntentProviderAdapter:
+class PaymentIntegrationAdapter:
     def initiate(self, *, intent, payload) -> PaymentInitiationResult: ...
     def verify_webhook(self, *, payload, headers) -> bool: ...
     def process_webhook(self, *, payload) -> PaymentWebhookResult: ...
@@ -169,7 +169,7 @@ class PaymentIntentProviderAdapter:
     def refund(self, *, intent, amount) -> dict: ...
 ```
 
-Current providers: M-PESA (Daraja), Stripe. Adding a new provider means implementing this interface — no changes to the core payment flow.
+Current integrations: M-PESA (Daraja), Stripe. Adding a new payment method means implementing this interface — no changes to the core payment flow.
 
 ---
 

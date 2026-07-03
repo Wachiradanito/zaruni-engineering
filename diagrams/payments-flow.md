@@ -102,11 +102,11 @@ flowchart LR
 
 ---
 
-## Provider Architecture
+## Payment Integration Architecture
 
 ```mermaid
 classDiagram
-    class PaymentIntentProviderAdapter {
+    class PaymentIntegrationAdapter {
         <<interface>>
         +initiate(intent, payload) PaymentInitiationResult
         +verify_webhook(payload, headers) bool
@@ -115,8 +115,8 @@ classDiagram
         +refund(intent, amount) dict
     }
 
-    class MpesaIntentProvider {
-        +provider_code = "mpesa_partner"
+    class MpesaIntegration {
+        +integration_code = "mpesa"
         +initiate()
         +verify_webhook()
         +process_webhook()
@@ -124,8 +124,8 @@ classDiagram
         +refund()
     }
 
-    class StripeIntentProvider {
-        +provider_code = "stripe"
+    class StripeIntegration {
+        +integration_code = "stripe"
         +initiate()
         +verify_webhook()
         +process_webhook()
@@ -133,17 +133,17 @@ classDiagram
         +refund()
     }
 
-    class MockProvider {
-        +provider_code = "mock"
+    class MockIntegration {
+        +integration_code = "mock"
         +Used in tests only
     }
 
-    PaymentIntentProviderAdapter <|-- MpesaIntentProvider
-    PaymentIntentProviderAdapter <|-- StripeIntentProvider
-    PaymentIntentProviderAdapter <|-- MockProvider
+    PaymentIntegrationAdapter <|-- MpesaIntegration
+    PaymentIntegrationAdapter <|-- StripeIntegration
+    PaymentIntegrationAdapter <|-- MockIntegration
 ```
 
-Adding a new payment provider = implementing this interface. Core payment flow unchanged.
+Adding a new payment method = implementing this interface. Core payment flow unchanged.
 
 ---
 

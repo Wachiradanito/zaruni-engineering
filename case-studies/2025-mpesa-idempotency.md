@@ -14,7 +14,7 @@ The problem: **Safaricom can and does send the same callback more than once.**
 
 This is not a bug in their system — it's intentional. Their documentation explicitly states callbacks may be retried on network failures or timeouts. From their perspective, delivering the callback twice is safer than not delivering it at all. From our perspective, processing it twice meant:
 
-- A wallet credited twice for the same payment
+- A balance updated twice for the same payment
 - An escrow funded twice from the same transaction
 - A user receiving double the value they paid for
 
@@ -27,9 +27,9 @@ None of those outcomes are acceptable on a platform handling real money.
 The consequence of processing a duplicate callback without protection:
 
 1. User pays KES 500 via M-PESA
-2. Callback arrives, wallet credited KES 500 ✅
+2. Callback arrives, balance updated KES 500 ✅
 3. Network glitch on Safaricom's side — they retry the callback
-4. Same callback arrives again, wallet credited another KES 500 ❌
+4. Same callback arrives again, balance updated another KES 500 ❌
 5. User now has KES 1,000 but only paid KES 500
 
 At low transaction volume this might happen rarely. At production scale, with thousands of payments per day, it becomes a certainty — not a possibility. A platform that can silently create money from failed network calls is not a platform anyone can trust.
@@ -126,7 +126,7 @@ Only one worker ever processes a given callback. The database enforces this, not
 
 ### Layer 3: Idempotency Keys on All Financial Operations
 
-Even with the webhook deduplication, downstream operations (wallet credits, escrow state changes) have their own idempotency keys. Every financial mutation writes an `idempotency_key` field — a unique string scoped to the specific operation:
+Even with the webhook deduplication, downstream operations (balance updates, escrow state changes) have their own idempotency keys. Every financial mutation writes an `idempotency_key` field — a unique string scoped to the specific operation:
 
 ```python
 # Scoped to this specific intent's funding operation
@@ -156,7 +156,7 @@ The three-layer approach — unique constraint, row lock, idempotency keys — m
 
 The underlying principle is that **correctness shouldn't depend on external systems behaving well**. Safaricom retrying callbacks isn't a bug to report — it's expected behaviour to design around.
 
-This pattern (log → lock → idempotency key) is now the standard for every external payment callback in Zaruni, including Stripe and B2C M-PESA payouts.
+This pattern (log → lock → idempotency key) is now the standard for every external payment callback in Zaruni, including Stripe and M-PESA withdrawals.
 
 ---
 

@@ -2,7 +2,7 @@
 
 **Status:** Accepted  
 **Date:** Early 2025  
-**Context:** Zaruni needed a relational database that could reliably handle financial transactions (escrow, wallet ledger, payment settlement) alongside flexible product and user data.
+**Context:** Zaruni needed a relational database that could reliably handle financial transactions (escrow, wallet ledger, payment confirmation) alongside flexible product and user data.
 
 ---
 
@@ -19,7 +19,7 @@ Zaruni holds real money. An escrow table that can return a phantom read during a
 Three specific features sealed it:
 
 **1. JSONB**  
-Payment provider callbacks (M-PESA, Stripe) return payloads with shifting schemas. Storing them as `JSONB` lets us persist the raw payload without a migration every time Safaricom changes a field name, while still being able to index into it with GIN indexes when needed.
+M-PESA and Stripe callbacks return payloads with shifting schemas. Storing them as `JSONB` lets us persist the raw payload without a migration every time Safaricom changes a field name, while still being able to index into it with GIN indexes when needed.
 
 **2. `SELECT FOR UPDATE SKIP LOCKED`**  
 Our webhook processing uses `select_for_update(skip_locked=True)` to ensure exactly one worker processes each callback. MySQL supports `SKIP LOCKED` from 8.0+, but Django's ORM support for it was more mature and predictable on Postgres at the time we built this.

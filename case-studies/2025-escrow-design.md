@@ -65,7 +65,7 @@ This worked in tests. It broke in production.
 
 The failure mode: two workers processing separate "release" requests for the same escrow (legitimate if the buyer and seller both confirm completion simultaneously). Both pass the `if escrow.status != 'funded'` check before either commits, both credit the wallet, both mark it released.
 
-Result: wallet credited twice for the same escrow.
+Result: balance updated twice for the same escrow.
 
 The root cause: **check-then-act with no lock**. The database guarantees nothing about what happens between the `SELECT` (the if-check) and the `UPDATE` (the save). Another transaction can modify the row between those two operations.
 

@@ -48,7 +48,7 @@ Interactive Mermaid diagrams — rendered directly on GitHub.
 System design, data flow diagrams, and module interaction patterns.
 
 - [System Overview](architecture/system-overview.md) — 25+ modules, dependency rules, communication patterns
-- [Payments Architecture](architecture/payments-architecture.md) — STK Push flow, escrow state machine, provider adapters
+- [Payments Architecture](architecture/payments-architecture.md) — STK Push flow, escrow state machine, payment integrations
 - [Authentication System](architecture/auth-architecture.md) — Phone-first OTP, JWT lifecycle, device verification
 - [Deployment Topology](architecture/deployment-topology.md) — Caddy + Django + Postgres + Redis + Celery stack
 
