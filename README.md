@@ -36,6 +36,14 @@ This is how companies like Twitter, GoDaddy, and Red Hat operate — closed sour
 
 ## What's in This Repository
 
+### 🗺️ Diagrams
+Interactive Mermaid diagrams — rendered directly on GitHub.
+
+- [System Overview](diagrams/system-overview.md) — Full architecture, module dependency rules
+- [Payments Flow](diagrams/payments-flow.md) — STK Push sequence, escrow state machine, provider class diagram
+- [Auth Flow](diagrams/auth-flow.md) — Registration, JWT lifecycle, OTP security model, tier progression
+- [Deployment Topology](diagrams/deployment-topology.md) — Infrastructure, request routing, Celery tasks, CI/CD pipeline
+
 ### 📐 Architecture Documentation
 System design, data flow diagrams, and module interaction patterns.
 
@@ -147,6 +155,6 @@ Extracted packages have their own licenses — see individual repositories.
 
 ---
 
-**Status:** 🚀 Phase 2 complete — 3 case studies, 4 ADRs, 4 architecture docs published
+**Status:** ✅ Complete — 4 diagrams, 3 case studies, 4 ADRs, 4 architecture docs
 
 **Last Updated:** July 2026
