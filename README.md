@@ -39,25 +39,25 @@ This is how companies like Twitter, GoDaddy, and Red Hat operate — closed sour
 ### 📐 Architecture Documentation
 System design, data flow diagrams, and module interaction patterns.
 
-- [System Overview](architecture/system-overview.md) — *Coming Q3 2026*
-- [Payments Architecture](architecture/payments-architecture.md) — *Coming Q3 2026*
-- [Authentication System](architecture/auth-architecture.md) — *Coming Q3 2026*
-- [Deployment Topology](architecture/deployment-topology.md) — *Coming Q3 2026*
+- [System Overview](architecture/system-overview.md) — 25+ modules, dependency rules, communication patterns
+- [Payments Architecture](architecture/payments-architecture.md) — STK Push flow, escrow state machine, provider adapters
+- [Authentication System](architecture/auth-architecture.md) — Phone-first OTP, JWT lifecycle, device verification
+- [Deployment Topology](architecture/deployment-topology.md) — Caddy + Django + Postgres + Redis + Celery stack
 
 ### 📖 Case Studies
 Real engineering problems we solved, how we investigated them, and the solutions we built.
 
-- [M-PESA Callback Idempotency](case-studies/2025-mpesa-idempotency.md) — *Coming Soon*
-- [Escrow State Machine Design](case-studies/2025-escrow-design.md) — *Coming Soon*
-- [Verification Tier System](case-studies/2025-verification-tiers.md) — *Coming Soon*
+- [M-PESA Callback Idempotency](case-studies/2025-mpesa-idempotency.md) — How we eliminated duplicate wallet credits from Safaricom retries
+- [Escrow State Machine Design](case-studies/2025-escrow-design.md) — Building provably correct payment holds under concurrent access
+- [Verification Tier System](case-studies/2025-verification-tiers.md) — Progressive trust without killing registration conversion
 
 ### ⚖️ Architecture Decision Records
 Why we chose specific technologies and approaches (ADRs).
 
-- [ADR-0001: Postgres over MySQL](decisions/0001-postgres-over-mysql.md) — *Coming Soon*
-- [ADR-0002: Caddy over Nginx](decisions/0002-caddy-over-nginx.md) — *Coming Soon*
-- [ADR-0003: Self-hosted vs Cloud](decisions/0003-self-hosted-vs-cloud.md) — *Coming Soon*
-- [ADR-0004: Monolith-first Architecture](decisions/0004-monolith-first.md) — *Coming Soon*
+- [ADR-0001: Postgres over MySQL](decisions/0001-postgres-over-mysql.md) — Financial correctness, JSONB, SKIP LOCKED
+- [ADR-0002: Caddy over Nginx](decisions/0002-caddy-over-nginx.md) — Automatic HTTPS, operational simplicity
+- [ADR-0003: Self-hosted vs Cloud](decisions/0003-self-hosted-vs-cloud.md) — ~95% cost savings at current scale
+- [ADR-0004: Monolith-first Architecture](decisions/0004-monolith-first.md) — Extraction-ready without distributed systems tax
 
 ### 📦 Extracted Open-Source Tools
 Reusable packages we've built and open-sourced — zero Zaruni-specific business logic.
@@ -147,6 +147,6 @@ Extracted packages have their own licenses — see individual repositories.
 
 ---
 
-**Status:** 🚧 Phase 0 complete — documentation in progress
+**Status:** 🚀 Phase 2 complete — 3 case studies, 4 ADRs, 4 architecture docs published
 
 **Last Updated:** July 2026
