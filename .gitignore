@@ -158,3 +158,30 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+
+
+# Zaruni-specific: Never from private repo
+*.key
+*.pem
+*.crt
+*.p12
+secrets/
+.env.*
+!.env.example
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Editor specific
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Explicitly allow documentation files
+!*.md
+!*.svg
+!*.png
+!*.jpg
+!*.pdf
